@@ -18,8 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.am_practice_1.ui.theme.AMPractice1Theme
 
 class MainActivity : ComponentActivity() {
@@ -27,46 +29,44 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AMPractice1Theme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MobileLogo()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    DiceRollerApp()
                 }
             }
         }
     }
 }
 
-@Composable
 @Preview
-fun MobileLogo() {
-    Column (
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        var mobile by remember { mutableStateOf( 1) }
-        val drawable = when(mobile) {
-            1 -> R.drawable.apple
-            2 -> R.drawable.google
-            3 -> R.drawable.htc
-            4 -> R.drawable.microsoft
-            5 -> R.drawable.motorola
-            6 -> R.drawable.nokia
-            7 -> R.drawable.oppo
-            8 -> R.drawable.samsung
-            9 -> R.drawable.sony
-            else -> R.drawable.xiaomi
-        }
+@Composable
+fun DiceRollerApp() {
+    DiceWithButtonAndImage(modifier = Modifier
+        .fillMaxSize()
+        .wrapContentSize(Alignment.Center)
+    )
+}
 
-        Image(
-            modifier = Modifier.width(200.dp)
-                               .padding(vertical = 10.dp),
-            painter = painterResource(id = drawable),
-            contentDescription = null
-        )
+@Composable
+fun DiceWithButtonAndImage(modifier: Modifier = Modifier) {
+    var result by remember { mutableStateOf( 1) }
+    val imageResource = when(result) {
+        1 -> R.drawable.dice_1
+        2 -> R.drawable.dice_2
+        3 -> R.drawable.dice_3
+        4 -> R.drawable.dice_4
+        5 -> R.drawable.dice_5
+        else -> R.drawable.dice_6
+    }
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(painter = painterResource(imageResource), contentDescription = result.toString())
 
-        Button(onClick = { mobile = (1..10).random() }) {
-            Text("Сменить телефон")
+        Button(
+            onClick = { result = (1..6).random() },
+        ) {
+            Text(text = stringResource(R.string.roll), fontSize = 24.sp)
         }
     }
 }
